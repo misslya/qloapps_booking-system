@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  qloappsv170:
+    image: webkul/qloapps_docker:latest
+    environment:
+      - USER_PASSWORD=aliadesu10
+      - MYSQL_ROOT_PASSWORD=aliadesu10
+      - MYSQL_DATABASE=qloapps
+    networks:
+      - phpmyadmin-tier
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.qloapps.entrypoints=web,websecure
+      - traefik.http.routers.qloapps.tls=true
+      - traefik.http.routers.qloapps.tls.certresolver=lets-encrypt
+      - traefik.http.services.qloapps.loadbalancer.server.port=80
+      - traefik.http.routers.qloapps.rule=Host(`phpmyadmin.scriptertechnology.com`)
+networks:
+  phpmyadmin-tier:
+    external: true
+  web:
+    external: true
