@@ -1,0 +1,31 @@
+version: '3'                                                                                            docker-compose.yml.save                                                                                                         version: '3'
+
+networks:
+  phpmyadmin-tier:
+    external:
+      name: phpmyadmin-tier
+  web:
+    external: true
+  internal:
+    external: false
+
+
+services:
+  qloappsv160:
+    image: webkul/qloapps_docker:latest
+    ports:
+      - "3306:3306"
+      - "2222:22"
+    environment:
+      USER_PASSWORD: "aliadesu10"
+      MYSQL_ROOT_PASSWORD: "aliadesu10"
+      MYSQL_DATABASE: "qloapps"
+    labels:
+      - traefik.http.routers.qloapps.rule=Host(`qloapps.scriptertechnology.com`)
+      - traefik.http.routers.qloapps.tls=true
+      - traefik.http.routers.qloapps.tls.certresolver=lets-encrypt
+      - traefik.port=80
+    networks:
+      - phpmyadmin-tier
+      - web
+      - internal
